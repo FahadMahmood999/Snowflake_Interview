@@ -14,3 +14,24 @@ select col1,col2,ROW_NUMBER() OVER(MAX(GREATEST(col1,col2)) order by col1,col2) 
 where RN=3;
 
 select MAX(GREATEST(col1,col2)) from test5;
+
+
+How to handle the date field if we have column as string and we want to get the output in Date format.
+
+ERDAT column Data : 20210408
+Need output after conversion: 2021-04-08
+
+Below is the query we can use:
+
+ select  "MANDT","VBELN","GLREQUEST",ERDAT,to_date(ERDAT::varchar,'YYYYMMDD') as ERDAT FROM PROD_DB.ECC_PRTWO.V_MERGED_Z00D_VBAK   where GLDELFLAG <> 'D' 
+ and MANDT=400 and VBELN='0025746100' ;
+ 
+Tried Cast but not worked..
+
+ SELECT "MANDT","VBELN","GLREQUEST",cast("ERDAT" as date) as ERDAT FROM PROD_DB.ECC_PRTWO.Z00D_VBAK   where GLDELFLAG <> 'D' 
+ and MANDT=400 and VBELN='0025746100' ;  ---1970-08-22  (Getting complete wrong data after appling cast )
+ 
+ --Timestamp also not supporting
+ SELECT "MANDT","VBELN","GLREQUEST",to_timestamp(ERDAT) as ERDAT FROM PROD_DB.ECC_PRTWO.Z00D_VBAK   where GLDELFLAG <> 'D' 
+ and MANDT=400 and VBELN='0025746100' ;  ---1970-08-22
+ 
